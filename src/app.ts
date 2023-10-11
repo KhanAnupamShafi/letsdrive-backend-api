@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express, { Application, NextFunction, Response } from 'express';
+import express, { Application, NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 
 import routes from './app/routes';
@@ -25,7 +25,7 @@ app.use('/api/v1', routes);
 app.get('/', async (req: Request, res: Response, next: NextFunction) => {
   res.status(httpStatus.OK).json({
     success: true,
-    message: 'Welcome HTTP SERVER',
+    message: 'Welcome to HTTP SERVER',
   });
 });
 
