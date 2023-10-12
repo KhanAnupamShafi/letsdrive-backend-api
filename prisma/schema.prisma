@@ -1,0 +1,154 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String  @id @default(cuid()) @map("user_id")
+  email           String  @unique
+  password        String
+  fullName        String  @map("full_name")
+  phoneNumber     String  @unique @map("phone_number")
+  role            String
+  address         String
+  isPasswordReset Boolean @default(false) @map("is_password_reset")
+
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  bookings      Booking[]
+  reviews       Review[]
+  notifications Notification[]
+
+  @@unique([email, phoneNumber])
+  @@map("users")
+}
+
+model Admin {
+  id              String  @id @default(cuid()) @map("admin_id")
+  email           String  @unique
+  password        String
+  fullName        String  @map("full_name")
+  phoneNumber     String  @map("phone_number")
+  role            String
+  isPasswordReset Boolean @map("is_password_reset")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  contents  Content[]
+
+  @@unique([email, phoneNumber])
+  @@map("admins")
+}
+
+model Service {
+  id          String @id @default(cuid())
+  name        String
+  price       Float
+  description String //4-5 seats
+
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  bookings    Booking[]
+  carPackages CarPackage[]
+
+  @@map("services")
+}
+
+model CarPackage {
+  id             String  @id @default(cuid())
+  name           String
+  description    String
+  model          String
+  availability   Boolean
+  stock          Int
+  seatCapacity   Int
+  priceStart     Float   @map("price_start")
+  luggage        Int
+  wifi           Boolean
+  airConditioner Boolean @map("air_conditioner")
+  transmission   Boolean
+
+  serviceId String  @map("service_id")
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  reviews   Review[]
+
+  @@map("car_packages")
+}
+
+model Booking {
+  id             String   @id @default(cuid())
+  bookingDate    DateTime @map("booking_date")
+  status         String
+  days           String
+  tripType       String
+  pickUpLocation String
+  destination    String
+  departureTime  DateTime
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  serviceId String  @map("service_id")
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("bookings")
+}
+
+model Review {
+  id      String @id @default(cuid())
+  rating  Int
+  comment String
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  carPackageId String     @map("car_package_id")
+  carPackage   CarPackage @relation(fields: [carPackageId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("reviews")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  message   String
+  timestamp DateTime
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("notifications")
+}
+
+model Content {
+  id       String @id @default(cuid())
+  title    String
+  body     String
+  category String
+
+  adminId String @map("admin_id")
+  admin   Admin  @relation(fields: [adminId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("contents")
+}
