@@ -66,8 +66,8 @@ model CarPackage {
   name           String
   description    String
   model          String
-  availability   Boolean
-  stock          Int
+  availability   Boolean @default(false)
+  carAvailable   Int     @map("car_available")
   seatCapacity   Int
   priceStart     Float   @map("price_start")
   luggage        Int
