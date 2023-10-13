@@ -52,6 +52,7 @@ model Service {
   name        String
   price       Float
   description String //4-5 seats
+  image       String
 
   createdAt   DateTime     @default(now()) @map("created_at")
   updatedAt   DateTime     @updatedAt @map("updated_at")
@@ -64,16 +65,19 @@ model Service {
 model CarPackage {
   id             String  @id @default(cuid())
   name           String
+  image          String
   description    String
   model          String
   availability   Boolean @default(false)
   carAvailable   Int     @map("car_available")
-  seatCapacity   Int
+  seatCapacity   Int     @map("seat_capacity")
   priceStart     Float   @map("price_start")
+  fuel           String
   luggage        Int
   wifi           Boolean
   airConditioner Boolean @map("air_conditioner")
   transmission   Boolean
+  rating         Int
 
   serviceId String  @map("service_id")
   service   Service @relation(fields: [serviceId], references: [id])
@@ -101,8 +105,9 @@ model Booking {
   serviceId String  @map("service_id")
   service   Service @relation(fields: [serviceId], references: [id])
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  Notification Notification[]
 
   @@map("bookings")
 }
@@ -128,6 +133,9 @@ model Notification {
   id        String   @id @default(cuid())
   message   String
   timestamp DateTime
+
+  bookingId String  @map("booking_id")
+  booking   Booking @relation(fields: [bookingId], references: [id])
 
   userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id])
