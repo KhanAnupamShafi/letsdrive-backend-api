@@ -1,4 +1,4 @@
-export const filterableFields: string[] = ['searchTerm', 'fullName', 'email', 'phoneNumber'];
+export const filterableFields: string[] = ['searchTerm', 'carPackageId'];
 
 export const searchableFields: string[] = [];
 

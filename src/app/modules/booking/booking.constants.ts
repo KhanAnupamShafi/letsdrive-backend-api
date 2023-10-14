@@ -1,12 +1,11 @@
 export const filterableFields: string[] = [
   'searchTerm',
-  'model',
-  'minPrice',
-  'maxPrice',
-  'seatCapacity',
-  'fuel',
-  // 'rating',
-  'service',
+  'status',
+  'tripType',
+  'departureDate',
+  'minCost',
+  'maxCost',
+  'carPackageId',
 ];
 
 export const searchableFields: string[] = [];

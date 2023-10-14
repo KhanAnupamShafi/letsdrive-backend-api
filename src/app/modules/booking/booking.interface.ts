@@ -1,9 +1,11 @@
+import { Status } from '@prisma/client';
+
 export type FilterDataType = {
-  searchTerm?: string;
-  model?: string;
-  service?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  seatCapacity?: number;
-  fuel?: string;
+  searchTerm?: string | undefined;
+  carPackageId?: string | undefined;
+  status?: Status | undefined;
+  tripType?: string | undefined;
+  departureDate?: Date | undefined;
+  minCost?: number | undefined;
+  maxCost?: number | undefined;
 };

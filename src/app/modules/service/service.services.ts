@@ -1,5 +1,6 @@
 import { Service } from '@prisma/client';
 import { IGenericResponse, IPaginationOptions } from '../../../interface/common';
+import { ApiError } from '../../middlewares/globalErrorHandler';
 import calcPagination from '../../shared/calcPagination';
 import prisma from '../../shared/prisma';
 
@@ -55,6 +56,10 @@ const retrieveOneData = async (id: string): Promise<Service | null> => {
   const result = await prisma.service.findUnique({
     where: { id },
   });
+
+  if (!result) {
+    throw new ApiError(404, 'Service data not found');
+  }
   return result;
 };
 
