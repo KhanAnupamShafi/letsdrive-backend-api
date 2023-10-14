@@ -1,7 +1,8 @@
 import { User } from '@prisma/client';
-import prisma from '../../shared/prisma';
-import calcPagination from '../../shared/calcPagination';
 import { IGenericResponse, IPaginationOptions } from '../../../interface/common';
+import { ApiError } from '../../middlewares/globalErrorHandler';
+import calcPagination from '../../shared/calcPagination';
+import prisma from '../../shared/prisma';
 
 const createData = async (data: User): Promise<User> => {
   const result = await prisma.user.create({ data });
@@ -55,6 +56,10 @@ const retrieveOneData = async (id: string): Promise<User | null> => {
   const result = await prisma.user.findUnique({
     where: { id },
   });
+
+  if (!result) {
+    throw new ApiError(404, 'User data not found');
+  }
   return result;
 };
 

@@ -88,6 +88,10 @@ const retrieveOneData = async (id: string): Promise<CarPackage | null> => {
     include: { service: true },
     where: { id },
   });
+
+  if (!result) {
+    throw new ApiError(404, 'Car data not found');
+  }
   return result;
 };
 

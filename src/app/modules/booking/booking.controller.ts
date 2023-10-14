@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import asyncMiddleware from '../../shared/asyncMiddleware';
+import pick from '../../shared/pick';
 import sendResponse from '../../shared/sendResponse';
+import { filterableFields } from './booking.constants';
 import { bookingService } from './booking.services';
 
 const createData = asyncMiddleware(async (req: Request, res: Response) => {
@@ -38,31 +40,31 @@ const cancelBooking = asyncMiddleware(async (req: Request, res: Response) => {
   });
 });
 
-// const retrieveManyData = asyncMiddleware(async (req: Request, res: Response) => {
-//   const filters = pick(req.query, filterableFields);
+const retrieveManyData = asyncMiddleware(async (req: Request, res: Response) => {
+  const filters = pick(req.query, filterableFields);
+  console.log(filters, 'as');
+  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+  const result = await bookingService.retrieveManyData(filters, options);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Booking data retrieved successfully',
+    meta: result.meta,
+    data: result.data,
+  });
+});
 
-//   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
-//   const result = await bookingService.retrieveManyData(filters, options);
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Car Packages retrieved successfully',
-//     meta: result.meta,
-//     data: result.data,
-//   });
-// });
+const retrieveOneData = asyncMiddleware(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await bookingService.retrieveOneData(id);
 
-// const retrieveOneData = asyncMiddleware(async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const result = await bookingService.retrieveOneData(id);
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Booking data retrieved successfully',
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Booking data retrieved successfully',
+    data: result,
+  });
+});
 
 // const updateOneData = asyncMiddleware(async (req: Request, res: Response) => {
 //   const { id } = req.params;
@@ -93,8 +95,8 @@ export const bookingController = {
   createData,
   acceptBooking,
   cancelBooking,
-  // retrieveManyData,
-  // retrieveOneData,
+  retrieveManyData,
+  retrieveOneData,
   // updateOneData,
   // deleteOneData,
 };

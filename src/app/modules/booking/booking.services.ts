@@ -1,8 +1,11 @@
 import { Booking, Status } from '@prisma/client';
 import httpStatus from 'http-status';
+import { IGenericResponse, IPaginationOptions } from '../../../interface/common';
 import { ApiError } from '../../middlewares/globalErrorHandler';
+import calcPagination from '../../shared/calcPagination';
 import prisma from '../../shared/prisma';
 import { carPackageService } from '../carPackage/carPackage.services';
+import { FilterDataType } from './booking.interface';
 
 const createData = async (data: Booking): Promise<Booking> => {
   const { carPackageId, userId, tripType, reserveDays } = data;
@@ -105,94 +108,101 @@ const cancelBooking = async (id: string): Promise<Booking> => {
   });
   return result;
 };
-// const retrieveManyData = async (
-//   filtersData: Record<string, unknown>,
-//   options: IPaginationOptions
-// ): Promise<IGenericResponse<Booking[]>> => {
-//   const { limit, page, skip } = calcPagination(options);
+const retrieveManyData = async (
+  filtersData: FilterDataType,
+  options: IPaginationOptions
+): Promise<IGenericResponse<Booking[]>> => {
+  const { limit, page, skip } = calcPagination(options);
+  const { searchTerm, ...filterOnlyFields } = filtersData;
+  const result = await prisma.booking.findMany({
+    include: { carPackage: true, user: true },
+    where: {
+      AND: [
+        {
+          OR: [
+            {
+              user: {
+                fullName: { contains: searchTerm, mode: 'insensitive' },
+              },
+            },
+            {
+              user: {
+                phoneNumber: { contains: searchTerm, mode: 'insensitive' },
+              },
+            },
+            {
+              user: {
+                email: { contains: searchTerm, mode: 'insensitive' },
+              },
+            },
+          ],
+        },
+        {
+          carPackage: {
+            id: {
+              equals: filterOnlyFields.carPackageId,
+            },
+          },
+        },
 
-//   const result = await prisma.booking.findMany({
-//     include: { service: true },
-//     where: {
-//       AND: [
-//         {
-//           OR: [
-//             {
-//               name: {
-//                 contains: filtersData.searchTerm && (filtersData.searchTerm as string),
-//                 mode: 'insensitive',
-//               },
-//             },
-//             {
-//               model: {
-//                 contains: filtersData.searchTerm && (filtersData.searchTerm as string),
-//                 mode: 'insensitive',
-//               },
-//             },
-//           ],
-//         },
-//         {
-//           service: {
-//             name: {
-//               equals: filtersData.service as string,
-//               mode: 'insensitive',
-//             },
-//           },
-//         },
+        {
+          totalCost: {
+            gte: filterOnlyFields.minCost && parseFloat(filterOnlyFields.minCost.toString()),
+            lte: filterOnlyFields.maxCost && parseFloat(filterOnlyFields.maxCost.toString()),
+          },
+        },
 
-//         {
-//           priceStart: {
-//             gte: filtersData.minPrice && Number(filtersData.minPrice),
-//             lte: filtersData.minPrice && Number(filtersData.maxPrice),
-//           },
-//         },
+        {
+          departureDate: {
+            equals: filterOnlyFields.departureDate as Date,
+          },
+        },
+        {
+          tripType: { equals: filterOnlyFields.tripType, mode: 'insensitive' },
+        },
+        {
+          status: { equals: filterOnlyFields.status },
+        },
+      ],
+    },
+    skip,
+    take: limit,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? { [options.sortBy]: options.sortOrder }
+        : {
+            createdAt: 'desc',
+          },
+  });
+  const total = await prisma.booking.count({});
 
-//         {
-//           seatCapacity: {
-//             equals: filtersData.seatCapacity && Number(filtersData.seatCapacity),
-//           },
-//         },
-//         {
-//           fuel: { equals: filtersData.fuel as string, mode: 'insensitive' },
-//         },
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
+};
 
-//       ],
-//     },
-//     skip,
-//     take: limit,
-//     orderBy:
-//       options.sortBy && options.sortOrder
-//         ? { [options.sortBy]: options.sortOrder }
-//         : {
-//             createdAt: 'desc',
-//           },
-//   });
-//   const total = await prisma.booking.count({});
-
-//   return {
-//     meta: {
-//       total,
-//       page,
-//       limit,
-//     },
-//     data: result,
-//   };
-// };
-
-// const retrieveOneData = async (id: string): Promise<Booking | null> => {
-//   const result = await prisma.booking.findUnique({
-//     include: { service: true },
-//     where: { id },
-//   });
-//   return result;
-// };
+const retrieveOneData = async (id: string): Promise<Booking | null> => {
+  const result = await prisma.booking.findUnique({
+    include: { carPackage: true, user: true },
+    where: { id },
+  });
+  if (!result) {
+    throw new ApiError(404, 'Booking data not found');
+  }
+  return result;
+};
 
 export const bookingService = {
   createData,
   acceptBooking,
   cancelBooking,
-  // retrieveManyData,
-  // retrieveOneData,
+  retrieveManyData,
+  retrieveOneData,
   // updateOneData,
   // deleteOneData,
 };

@@ -3,17 +3,17 @@ import httpStatus from 'http-status';
 import asyncMiddleware from '../../shared/asyncMiddleware';
 import pick from '../../shared/pick';
 import sendResponse from '../../shared/sendResponse';
-import { filterableFields } from './user.constants';
-import { userService } from './user.services';
+import { filterableFields } from './review.constants';
+import { reviewService } from './review.services';
 
 const createData = asyncMiddleware(async (req: Request, res: Response) => {
   const data = req.body;
-  const result = await userService.createData(data);
+  const result = await reviewService.createData(data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'User created successfully',
+    message: 'Review created successfully',
     data: result,
   });
 });
@@ -21,11 +21,11 @@ const createData = asyncMiddleware(async (req: Request, res: Response) => {
 const retrieveManyData = asyncMiddleware(async (req: Request, res: Response) => {
   const filters = pick(req.query, filterableFields);
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
-  const result = await userService.retrieveManyData(filters, options);
+  const result = await reviewService.retrieveManyData(filters, options);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Users retrieved successfully',
+    message: 'Reviews retrieved successfully',
     meta: result.meta,
     data: result.data,
   });
@@ -33,12 +33,12 @@ const retrieveManyData = asyncMiddleware(async (req: Request, res: Response) => 
 
 const retrieveOneData = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await userService.retrieveOneData(id);
+  const result = await reviewService.retrieveOneData(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'User retrieved successfully',
+    message: 'Review retrieved successfully',
     data: result,
   });
 });
@@ -46,29 +46,29 @@ const retrieveOneData = asyncMiddleware(async (req: Request, res: Response) => {
 const updateOneData = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
   const data = req.body;
-  const result = await userService.updateOneData(id, data);
+  const result = await reviewService.updateOneData(id, data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'User updated successfully',
+    message: 'Review updated successfully',
     data: result,
   });
 });
 
 const deleteOneData = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await userService.deleteOneData(id);
+  const result = await reviewService.deleteOneData(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'User deleted successfully',
+    message: 'Review deleted successfully',
     data: result,
   });
 });
 
-export const userController = {
+export const reviewController = {
   createData,
   retrieveManyData,
   retrieveOneData,

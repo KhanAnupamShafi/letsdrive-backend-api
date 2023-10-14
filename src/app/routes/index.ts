@@ -3,6 +3,7 @@ import express from 'express';
 import { adminRoutes } from '../modules/admin/admin.routes';
 import { bookingRoutes } from '../modules/booking/booking.routes';
 import { carPackagesRoutes } from '../modules/carPackage/carPackage.routes';
+import { reviewRoutes } from '../modules/review/review.routes';
 import { serviceRoutes } from '../modules/service/service.routes';
 import { userRoutes } from '../modules/user/user.routes';
 
@@ -28,6 +29,10 @@ const moduleRoutes: any[] = [
   {
     path: '/bookings',
     route: bookingRoutes,
+  },
+  {
+    path: '/reviews',
+    route: reviewRoutes,
   },
 ];
 

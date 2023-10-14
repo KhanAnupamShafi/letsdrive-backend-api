@@ -1,5 +1,6 @@
 import { Admin } from '@prisma/client';
 import { IGenericResponse, IPaginationOptions } from '../../../interface/common';
+import { ApiError } from '../../middlewares/globalErrorHandler';
 import calcPagination from '../../shared/calcPagination';
 import prisma from '../../shared/prisma';
 
@@ -55,6 +56,9 @@ const retrieveOneData = async (id: string): Promise<Admin | null> => {
   const result = await prisma.admin.findUnique({
     where: { id },
   });
+  if (!result) {
+    throw new ApiError(404, 'Admin data not found');
+  }
   return result;
 };
 
