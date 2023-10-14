@@ -56,7 +56,6 @@ model Service {
 
   createdAt   DateTime     @default(now()) @map("created_at")
   updatedAt   DateTime     @updatedAt @map("updated_at")
-  bookings    Booking[]
   carPackages CarPackage[]
 
   @@map("services")
@@ -64,12 +63,12 @@ model Service {
 
 model CarPackage {
   id             String  @id @default(cuid())
+  carId          Int     @default(autoincrement())
   name           String
   image          String
   description    String
   model          String
-  availability   Boolean @default(false)
-  carAvailable   Int     @map("car_available")
+  isAvailable    Boolean @default(true)
   seatCapacity   Int     @map("seat_capacity")
   priceStart     Float   @map("price_start")
   fuel           String
@@ -77,14 +76,16 @@ model CarPackage {
   wifi           Boolean
   airConditioner Boolean @map("air_conditioner")
   transmission   Boolean
-  rating         Int
+  rating         Int     @default(0)
+  bookedUntil    String  @map("booked_until")
 
   serviceId String  @map("service_id")
   service   Service @relation(fields: [serviceId], references: [id])
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
   reviews   Review[]
+  bookings  Booking[]
 
   @@map("car_packages")
 }
@@ -92,18 +93,19 @@ model CarPackage {
 model Booking {
   id             String   @id @default(cuid())
   bookingDate    DateTime @map("booking_date")
-  status         String
-  days           String
+  status         Status?  @default(PENDING)
+  reserveDays    Int      @default(1) @map("reserve_days")
   tripType       String
   pickUpLocation String
   destination    String
-  departureTime  DateTime
+  departureDate  DateTime @map("departure_date")
+  departureTime  String   @map("departure_time")
+  totalCost      Float    @default(0) @map("total_cost")
+  userId         String   @map("user_id")
+  user           User     @relation(fields: [userId], references: [id])
 
-  userId String @map("user_id")
-  user   User   @relation(fields: [userId], references: [id])
-
-  serviceId String  @map("service_id")
-  service   Service @relation(fields: [serviceId], references: [id])
+  carPackageId String     @map("car_package_id")
+  carPackage   CarPackage @relation(fields: [carPackageId], references: [id])
 
   createdAt    DateTime       @default(now()) @map("created_at")
   updatedAt    DateTime       @updatedAt @map("updated_at")
@@ -159,4 +161,11 @@ model Content {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("contents")
+}
+
+// enum collection
+enum Status {
+  PENDING
+  APPROVED
+  CANCELED
 }

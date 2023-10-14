@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import express from 'express';
 import { adminRoutes } from '../modules/admin/admin.routes';
+import { bookingRoutes } from '../modules/booking/booking.routes';
 import { carPackagesRoutes } from '../modules/carPackage/carPackage.routes';
 import { serviceRoutes } from '../modules/service/service.routes';
 import { userRoutes } from '../modules/user/user.routes';
@@ -23,6 +24,10 @@ const moduleRoutes: any[] = [
   {
     path: '/car-packages',
     route: carPackagesRoutes,
+  },
+  {
+    path: '/bookings',
+    route: bookingRoutes,
   },
 ];
 

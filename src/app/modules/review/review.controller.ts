@@ -3,30 +3,29 @@ import httpStatus from 'http-status';
 import asyncMiddleware from '../../shared/asyncMiddleware';
 import pick from '../../shared/pick';
 import sendResponse from '../../shared/sendResponse';
-import { filterableFields } from './carPackage.constants';
-import { carPackageService } from './carPackage.services';
+import { filterableFields } from './user.constants';
+import { userService } from './user.services';
 
 const createData = asyncMiddleware(async (req: Request, res: Response) => {
   const data = req.body;
-  const result = await carPackageService.createData(data);
+  const result = await userService.createData(data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Car Package created successfully',
+    message: 'User created successfully',
     data: result,
   });
 });
 
 const retrieveManyData = asyncMiddleware(async (req: Request, res: Response) => {
   const filters = pick(req.query, filterableFields);
-
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
-  const result = await carPackageService.retrieveManyData(filters, options);
+  const result = await userService.retrieveManyData(filters, options);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Car Packages retrieved successfully',
+    message: 'Users retrieved successfully',
     meta: result.meta,
     data: result.data,
   });
@@ -34,12 +33,12 @@ const retrieveManyData = asyncMiddleware(async (req: Request, res: Response) => 
 
 const retrieveOneData = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await carPackageService.retrieveOneData(id);
+  const result = await userService.retrieveOneData(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Car Package retrieved successfully',
+    message: 'User retrieved successfully',
     data: result,
   });
 });
@@ -47,57 +46,32 @@ const retrieveOneData = asyncMiddleware(async (req: Request, res: Response) => {
 const updateOneData = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
   const data = req.body;
-  const result = await carPackageService.updateOneData(id, data);
+  const result = await userService.updateOneData(id, data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Car Package updated successfully',
+    message: 'User updated successfully',
     data: result,
   });
 });
 
 const deleteOneData = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await carPackageService.deleteOneData(id);
+  const result = await userService.deleteOneData(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Car Package deleted successfully',
+    message: 'User deleted successfully',
     data: result,
   });
 });
 
-const makeCarAvailable = asyncMiddleware(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await carPackageService.makeCarAvailable(id);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Car Package is now available',
-    data: result,
-  });
-});
-const getCalculatedPrice = asyncMiddleware(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await carPackageService.getCalculatedPrice(id, req.body);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Car Package price obtained',
-    data: result,
-  });
-});
-
-export const carPackageController = {
+export const userController = {
   createData,
   retrieveManyData,
   retrieveOneData,
   updateOneData,
   deleteOneData,
-  makeCarAvailable,
-  getCalculatedPrice,
 };

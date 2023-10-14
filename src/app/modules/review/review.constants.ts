@@ -1,13 +1,4 @@
-export const filterableFields: string[] = [
-  'searchTerm',
-  'model',
-  'minPrice',
-  'maxPrice',
-  'seatCapacity',
-  'fuel',
-  // 'rating',
-  'service',
-];
+export const filterableFields: string[] = ['searchTerm', 'fullName', 'email', 'phoneNumber'];
 
 export const searchableFields: string[] = [];
 

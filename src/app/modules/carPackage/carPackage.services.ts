@@ -1,14 +1,11 @@
-import { CarPackage } from '@prisma/client';
+import { CarPackage, Status } from '@prisma/client';
 import { IGenericResponse, IPaginationOptions } from '../../../interface/common';
+import { ApiError } from '../../middlewares/globalErrorHandler';
 import calcPagination from '../../shared/calcPagination';
 import prisma from '../../shared/prisma';
 import { FilterDataType } from './carPackage.interface';
 
 const createData = async (data: CarPackage): Promise<CarPackage> => {
-  const { carAvailable } = data;
-  if (carAvailable > 0) {
-    data.availability = true;
-  }
   const result = await prisma.carPackage.create({ data, include: { service: true } });
   return result;
 };
@@ -54,10 +51,7 @@ const retrieveManyData = async (
             lte: filtersData.minPrice && Number(filtersData.maxPrice),
           },
         },
-        {
-          availability:
-            filtersData.availability && filtersData.availability === 'true' ? true : false,
-        },
+
         {
           seatCapacity: {
             equals: filtersData.seatCapacity && Number(filtersData.seatCapacity),
@@ -66,12 +60,6 @@ const retrieveManyData = async (
         {
           fuel: { equals: filtersData.fuel as string, mode: 'insensitive' },
         },
-        // {
-        //   rating: {
-        //     gte: filtersData.minRating as number,
-        //     lte: filtersData.maxRating as number,
-        //   },
-        // },
       ],
     },
     skip,
@@ -120,10 +108,79 @@ const deleteOneData = async (id: string) => {
   return result;
 };
 
+const makeCarAvailable = async (id: string): Promise<CarPackage> => {
+  const carData = await prisma.carPackage.findUnique({ where: { id } });
+
+  if (!carData) {
+    throw new ApiError(404, 'This Car does not exist');
+  }
+
+  const result = await prisma.$transaction(async tx => {
+    // Check if there are any associated bookings for this car
+    const associatedBookings = await tx.booking.findMany({
+      where: {
+        carPackageId: carData.id,
+        status: Status.PENDING,
+      },
+    });
+    if (associatedBookings.length > 0) {
+      for (const booking of associatedBookings) {
+        await tx.booking.update({
+          where: { id: booking.id },
+          data: { status: Status.CANCELED },
+        });
+      }
+    }
+
+    // Update car availability
+    await tx.carPackage.update({
+      where: { id: carData.id },
+      data: { isAvailable: true, bookedUntil: '' },
+    });
+
+    return carData;
+  });
+  return result;
+};
+type CalculatePricePayload = {
+  tripType: string;
+  reserveDays: number;
+};
+
+const getCalculatedPrice = async (
+  carPackageId: string,
+  payload: CalculatePricePayload
+): Promise<number> => {
+  const { tripType, reserveDays } = payload;
+
+  const carPackage = await prisma.carPackage.findUnique({
+    where: { id: carPackageId },
+    include: {
+      service: true,
+    },
+  });
+  if (!carPackage) {
+    throw new ApiError(404, 'Car package not found');
+  }
+
+  let additionalCharge = 0;
+  if (tripType === 'inside') {
+    additionalCharge = 50; // Adjust the amount as needed
+  } else if (tripType === 'outside') {
+    additionalCharge = 100; // Adjust the amount as needed
+  }
+
+  const basePrice = Number(carPackage.service.price);
+  const totalPrice = basePrice + additionalCharge * reserveDays;
+  return totalPrice;
+};
+
 export const carPackageService = {
   createData,
   retrieveManyData,
   retrieveOneData,
   updateOneData,
   deleteOneData,
+  makeCarAvailable,
+  getCalculatedPrice,
 };
