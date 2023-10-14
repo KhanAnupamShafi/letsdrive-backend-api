@@ -9,6 +9,6 @@ router.get('/:id', bookingController.retrieveOneData);
 
 // generic routes - low order
 router.post('/book-car', bookingController.createData);
-// router.get('/', carPackageController.retrieveManyData);
+router.get('/', bookingController.retrieveManyData);
 
 export const bookingRoutes = router;
