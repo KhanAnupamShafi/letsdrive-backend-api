@@ -78,7 +78,7 @@ const deleteOneData = async (id: string) => {
   return result;
 };
 
-export const adminService = {
+export const AdminService = {
   createData,
   retrieveManyData,
   retrieveOneData,

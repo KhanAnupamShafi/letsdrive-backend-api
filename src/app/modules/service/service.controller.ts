@@ -4,11 +4,11 @@ import asyncMiddleware from '../../shared/asyncMiddleware';
 import pick from '../../shared/pick';
 import sendResponse from '../../shared/sendResponse';
 import { filterableFields } from './service.constants';
-import { rentService } from './service.services';
+import { RentService } from './service.services';
 
 const createData = asyncMiddleware(async (req: Request, res: Response) => {
   const data = req.body;
-  const result = await rentService.createData(data);
+  const result = await RentService.createData(data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -21,7 +21,7 @@ const createData = asyncMiddleware(async (req: Request, res: Response) => {
 const retrieveManyData = asyncMiddleware(async (req: Request, res: Response) => {
   const filters = pick(req.query, filterableFields);
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
-  const result = await rentService.retrieveManyData(filters, options);
+  const result = await RentService.retrieveManyData(filters, options);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -33,7 +33,7 @@ const retrieveManyData = asyncMiddleware(async (req: Request, res: Response) => 
 
 const retrieveOneData = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await rentService.retrieveOneData(id);
+  const result = await RentService.retrieveOneData(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -46,7 +46,7 @@ const retrieveOneData = asyncMiddleware(async (req: Request, res: Response) => {
 const updateOneData = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
   const data = req.body;
-  const result = await rentService.updateOneData(id, data);
+  const result = await RentService.updateOneData(id, data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -58,7 +58,7 @@ const updateOneData = asyncMiddleware(async (req: Request, res: Response) => {
 
 const deleteOneData = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await rentService.deleteOneData(id);
+  const result = await RentService.deleteOneData(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -68,7 +68,7 @@ const deleteOneData = asyncMiddleware(async (req: Request, res: Response) => {
   });
 });
 
-export const rentServiceController = {
+export const RentServiceController = {
   createData,
   retrieveManyData,
   retrieveOneData,

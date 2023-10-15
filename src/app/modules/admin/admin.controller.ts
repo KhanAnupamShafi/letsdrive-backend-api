@@ -4,11 +4,11 @@ import asyncMiddleware from '../../shared/asyncMiddleware';
 import pick from '../../shared/pick';
 import sendResponse from '../../shared/sendResponse';
 import { filterableFields } from './admin.constants';
-import { adminService } from './admin.services';
+import { AdminService } from './admin.services';
 
 const createData = asyncMiddleware(async (req: Request, res: Response) => {
   const data = req.body;
-  const result = await adminService.createData(data);
+  const result = await AdminService.createData(data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -21,7 +21,7 @@ const createData = asyncMiddleware(async (req: Request, res: Response) => {
 const retrieveManyData = asyncMiddleware(async (req: Request, res: Response) => {
   const filters = pick(req.query, filterableFields);
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
-  const result = await adminService.retrieveManyData(filters, options);
+  const result = await AdminService.retrieveManyData(filters, options);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -33,7 +33,7 @@ const retrieveManyData = asyncMiddleware(async (req: Request, res: Response) => 
 
 const retrieveOneData = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await adminService.retrieveOneData(id);
+  const result = await AdminService.retrieveOneData(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -46,7 +46,7 @@ const retrieveOneData = asyncMiddleware(async (req: Request, res: Response) => {
 const updateOneData = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
   const data = req.body;
-  const result = await adminService.updateOneData(id, data);
+  const result = await AdminService.updateOneData(id, data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -58,7 +58,7 @@ const updateOneData = asyncMiddleware(async (req: Request, res: Response) => {
 
 const deleteOneData = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await adminService.deleteOneData(id);
+  const result = await AdminService.deleteOneData(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -68,7 +68,7 @@ const deleteOneData = asyncMiddleware(async (req: Request, res: Response) => {
   });
 });
 
-export const adminController = {
+export const AdminController = {
   createData,
   retrieveManyData,
   retrieveOneData,

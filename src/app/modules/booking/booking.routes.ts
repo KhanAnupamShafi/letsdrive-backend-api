@@ -1,14 +1,14 @@
 import express from 'express';
-import { bookingController } from './booking.controller';
+import { BookingController } from './booking.controller';
 
 const router = express.Router();
 // dynamic routes - high order
-router.patch('/accept/:id', bookingController.acceptBooking);
-router.patch('/cancel/:id', bookingController.cancelBooking);
-router.get('/:id', bookingController.retrieveOneData);
+router.patch('/accept/:id', BookingController.acceptBooking);
+router.patch('/cancel/:id', BookingController.cancelBooking);
+router.get('/:id', BookingController.retrieveOneData);
 
 // generic routes - low order
-router.post('/book-car', bookingController.createData);
-router.get('/', bookingController.retrieveManyData);
+router.post('/book-car', BookingController.createData);
+router.get('/', BookingController.retrieveManyData);
 
-export const bookingRoutes = router;
+export const BookingRoutes = router;

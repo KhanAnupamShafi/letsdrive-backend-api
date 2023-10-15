@@ -1,14 +1,14 @@
 import express from 'express';
-import { rentServiceController } from './service.controller';
+import { RentServiceController } from './service.controller';
 
 const router = express.Router();
 // dynamic routes - high order
-router.get('/:id', rentServiceController.retrieveOneData);
-router.patch('/:id', rentServiceController.updateOneData);
-router.delete('/:id', rentServiceController.deleteOneData);
+router.get('/:id', RentServiceController.retrieveOneData);
+router.patch('/:id', RentServiceController.updateOneData);
+router.delete('/:id', RentServiceController.deleteOneData);
 
 // generic routes - low order
-router.post('/create', rentServiceController.createData);
-router.get('/', rentServiceController.retrieveManyData);
+router.post('/create', RentServiceController.createData);
+router.get('/', RentServiceController.retrieveManyData);
 
-export const serviceRoutes = router;
+export const ServiceRoutes = router;

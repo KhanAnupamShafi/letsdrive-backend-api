@@ -4,7 +4,7 @@ import { IGenericResponse, IPaginationOptions } from '../../../interface/common'
 import { ApiError } from '../../middlewares/globalErrorHandler';
 import calcPagination from '../../shared/calcPagination';
 import prisma from '../../shared/prisma';
-import { carPackageService } from '../carPackage/carPackage.services';
+import { CarPackageService } from '../carPackage/carPackage.services';
 import { FilterDataType } from './booking.interface';
 
 const createData = async (data: Booking): Promise<Booking> => {
@@ -28,7 +28,7 @@ const createData = async (data: Booking): Promise<Booking> => {
   }
 
   // Calculate the total price
-  const totalCost = await carPackageService.getCalculatedPrice(carPackageId, {
+  const totalCost = await CarPackageService.getCalculatedPrice(carPackageId, {
     tripType,
     reserveDays,
   });
@@ -197,7 +197,7 @@ const retrieveOneData = async (id: string): Promise<Booking | null> => {
   return result;
 };
 
-export const bookingService = {
+export const BookingService = {
   createData,
   acceptBooking,
   cancelBooking,

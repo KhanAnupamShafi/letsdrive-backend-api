@@ -1,14 +1,14 @@
 import express from 'express';
-import { userController } from './user.controller';
+import { UserController } from './user.controller';
 
 const router = express.Router();
 // dynamic routes - high order
-router.get('/:id', userController.retrieveOneData);
-router.patch('/:id', userController.updateOneData);
-router.delete('/:id', userController.deleteOneData);
+router.get('/:id', UserController.retrieveOneData);
+router.patch('/:id', UserController.updateOneData);
+router.delete('/:id', UserController.deleteOneData);
 
 // generic routes - low order
-router.post('/create', userController.createData);
-router.get('/', userController.retrieveManyData);
+router.post('/create', UserController.createData);
+router.get('/', UserController.retrieveManyData);
 
-export const userRoutes = router;
+export const UserRoutes = router;
