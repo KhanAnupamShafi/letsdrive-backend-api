@@ -1,16 +1,16 @@
 import express from 'express';
-import { carPackageController } from './carPackage.controller';
+import { CarPackageController } from './carPackage.controller';
 
 const router = express.Router();
 // dynamic routes - high order
-router.patch('/make-available/:id', carPackageController.makeCarAvailable);
-router.post('/get-price/:id', carPackageController.getCalculatedPrice);
-router.get('/:id', carPackageController.retrieveOneData);
-router.patch('/:id', carPackageController.updateOneData);
-router.delete('/:id', carPackageController.deleteOneData);
+router.patch('/make-available/:id', CarPackageController.makeCarAvailable);
+router.post('/get-price/:id', CarPackageController.getCalculatedPrice);
+router.get('/:id', CarPackageController.retrieveOneData);
+router.patch('/:id', CarPackageController.updateOneData);
+router.delete('/:id', CarPackageController.deleteOneData);
 
 // generic routes - low order
-router.post('/create', carPackageController.createData);
-router.get('/', carPackageController.retrieveManyData);
+router.post('/create', CarPackageController.createData);
+router.get('/', CarPackageController.retrieveManyData);
 
-export const carPackagesRoutes = router;
+export const CarPackagesRoutes = router;

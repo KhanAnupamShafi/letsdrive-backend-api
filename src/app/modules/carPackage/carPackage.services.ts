@@ -179,7 +179,7 @@ const getCalculatedPrice = async (
   return totalPrice;
 };
 
-export const carPackageService = {
+export const CarPackageService = {
   createData,
   retrieveManyData,
   retrieveOneData,

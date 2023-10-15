@@ -29,27 +29,6 @@ const createData = async (data: Notification): Promise<Notification> => {
   return result;
 };
 
-// const existingUserNotifications = await tx.notification.findMany({
-//     where: { userId },
-//     orderBy: { timestamp: 'desc' },
-//   });
-//   console.log(existingUserNotifications, 'existingUserNotifications');
-
-//   const notificationsToBeDeleted = existingUserNotifications.slice(maxNotificationCount - 1);
-//   console.log(notificationsToBeDeleted, 'ayaya');
-
-//   if (notificationsToBeDeleted.length > 0) {
-//     await tx.notification.deleteMany({
-//       where: { id: { in: notificationsToBeDeleted.map(notification => notification.id) } },
-//     });
-//   }
-//   const newNotification = await tx.notification.create({
-//     data,
-//     include: { user: true, booking: true },
-//   });
-
-//   return newNotification;
-
 const updateNotificationStat = async (userId: string): Promise<Notification[]> => {
   const result = prisma.$transaction(async tx => {
     const existingUserNotifications = await tx.notification.findMany({
@@ -82,4 +61,4 @@ const updateNotificationStat = async (userId: string): Promise<Notification[]> =
   return result;
 };
 
-export const notificationService = { createData, updateNotificationStat };
+export const NotificationService = { createData, updateNotificationStat };

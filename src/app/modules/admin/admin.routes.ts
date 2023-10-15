@@ -1,14 +1,14 @@
 import express from 'express';
-import { adminController } from './admin.controller';
+import { AdminController } from './admin.controller';
 
 const router = express.Router();
 // dynamic routes - high order
-router.get('/:id', adminController.retrieveOneData);
-router.patch('/:id', adminController.updateOneData);
-router.delete('/:id', adminController.deleteOneData);
+router.get('/:id', AdminController.retrieveOneData);
+router.patch('/:id', AdminController.updateOneData);
+router.delete('/:id', AdminController.deleteOneData);
 
 // generic routes - low order
-router.post('/create', adminController.createData);
-router.get('/', adminController.retrieveManyData);
+router.post('/create', AdminController.createData);
+router.get('/', AdminController.retrieveManyData);
 
-export const adminRoutes = router;
+export const AdminRoutes = router;

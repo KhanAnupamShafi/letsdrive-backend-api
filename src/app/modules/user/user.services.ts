@@ -79,7 +79,7 @@ const deleteOneData = async (id: string) => {
   return result;
 };
 
-export const userService = {
+export const UserService = {
   createData,
   retrieveManyData,
   retrieveOneData,

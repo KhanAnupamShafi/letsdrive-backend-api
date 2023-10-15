@@ -1,43 +1,58 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import express from 'express';
-import { adminRoutes } from '../modules/admin/admin.routes';
-import { bookingRoutes } from '../modules/booking/booking.routes';
-import { carPackagesRoutes } from '../modules/carPackage/carPackage.routes';
-import { notificationRoutes } from '../modules/notification/notifications.routes';
-import { reviewRoutes } from '../modules/review/review.routes';
-import { serviceRoutes } from '../modules/service/service.routes';
-import { userRoutes } from '../modules/user/user.routes';
+import { AdminRoutes } from '../modules/admin/admin.routes';
+import { AuthRoutes } from '../modules/auth/auth.routes';
+import { BookingRoutes } from '../modules/booking/booking.routes';
+import { CarPackagesRoutes } from '../modules/carPackage/carPackage.routes';
+import { CategoryRoutes } from '../modules/cms/category/category.routes';
+import { CmsRoutes } from '../modules/cms/cms.routes';
+import { NotificationRoutes } from '../modules/notification/notifications.routes';
+import { ReviewRoutes } from '../modules/review/review.routes';
+import { ServiceRoutes } from '../modules/service/service.routes';
+import { UserRoutes } from '../modules/user/user.routes';
 
 const router = express.Router();
 
 const moduleRoutes: any[] = [
   {
     path: '/users',
-    route: userRoutes,
+    route: UserRoutes,
   },
   {
     path: '/admins',
-    route: adminRoutes,
+    route: AdminRoutes,
   },
   {
     path: '/services',
-    route: serviceRoutes,
+    route: ServiceRoutes,
   },
   {
     path: '/car-packages',
-    route: carPackagesRoutes,
+    route: CarPackagesRoutes,
   },
   {
     path: '/bookings',
-    route: bookingRoutes,
+    route: BookingRoutes,
   },
   {
     path: '/reviews',
-    route: reviewRoutes,
+    route: ReviewRoutes,
   },
   {
     path: '/notifications',
-    route: notificationRoutes,
+    route: NotificationRoutes,
+  },
+  {
+    path: '/categories',
+    route: CategoryRoutes,
+  },
+  {
+    path: '/cms',
+    route: CmsRoutes,
+  },
+  {
+    path: '/auth',
+    route: AuthRoutes,
   },
 ];
 

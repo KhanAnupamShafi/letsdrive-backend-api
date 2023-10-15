@@ -4,11 +4,11 @@ import asyncMiddleware from '../../shared/asyncMiddleware';
 import pick from '../../shared/pick';
 import sendResponse from '../../shared/sendResponse';
 import { filterableFields } from './booking.constants';
-import { bookingService } from './booking.services';
+import { BookingService } from './booking.services';
 
 const createData = asyncMiddleware(async (req: Request, res: Response) => {
   const data = req.body;
-  const result = await bookingService.createData(data);
+  const result = await BookingService.createData(data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -19,7 +19,7 @@ const createData = asyncMiddleware(async (req: Request, res: Response) => {
 });
 const acceptBooking = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await bookingService.acceptBooking(id);
+  const result = await BookingService.acceptBooking(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -30,7 +30,7 @@ const acceptBooking = asyncMiddleware(async (req: Request, res: Response) => {
 });
 const cancelBooking = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await bookingService.cancelBooking(id);
+  const result = await BookingService.cancelBooking(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -44,7 +44,7 @@ const retrieveManyData = asyncMiddleware(async (req: Request, res: Response) => 
   const filters = pick(req.query, filterableFields);
   console.log(filters, 'as');
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
-  const result = await bookingService.retrieveManyData(filters, options);
+  const result = await BookingService.retrieveManyData(filters, options);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -56,7 +56,7 @@ const retrieveManyData = asyncMiddleware(async (req: Request, res: Response) => 
 
 const retrieveOneData = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await bookingService.retrieveOneData(id);
+  const result = await BookingService.retrieveOneData(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -91,7 +91,7 @@ const retrieveOneData = asyncMiddleware(async (req: Request, res: Response) => {
 //   });
 // });
 
-export const bookingController = {
+export const BookingController = {
   createData,
   acceptBooking,
   cancelBooking,

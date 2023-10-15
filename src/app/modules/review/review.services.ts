@@ -87,7 +87,7 @@ const deleteOneData = async (id: string) => {
   return result;
 };
 
-export const reviewService = {
+export const ReviewService = {
   createData,
   retrieveManyData,
   retrieveOneData,

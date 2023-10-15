@@ -2,11 +2,11 @@ import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import asyncMiddleware from '../../shared/asyncMiddleware';
 import sendResponse from '../../shared/sendResponse';
-import { notificationService } from './notification.service';
+import { NotificationService } from './notification.service';
 
 const createData = asyncMiddleware(async (req: Request, res: Response) => {
   const data = req.body;
-  const result = await notificationService.createData(data);
+  const result = await NotificationService.createData(data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -18,7 +18,7 @@ const createData = asyncMiddleware(async (req: Request, res: Response) => {
 
 const updateNotificationStat = asyncMiddleware(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await notificationService.updateNotificationStat(id);
+  const result = await NotificationService.updateNotificationStat(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -28,4 +28,4 @@ const updateNotificationStat = asyncMiddleware(async (req: Request, res: Respons
   });
 });
 
-export const notificationController = { createData, updateNotificationStat };
+export const NotificationController = { createData, updateNotificationStat };

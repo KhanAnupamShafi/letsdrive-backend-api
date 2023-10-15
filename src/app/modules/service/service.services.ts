@@ -79,7 +79,7 @@ const deleteOneData = async (id: string) => {
   return result;
 };
 
-export const rentService = {
+export const RentService = {
   createData,
   retrieveManyData,
   retrieveOneData,
