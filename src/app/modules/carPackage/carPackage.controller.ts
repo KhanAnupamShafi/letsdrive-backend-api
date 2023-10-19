@@ -9,7 +9,7 @@ import { CarPackageService } from './carPackage.services';
 const createData = asyncMiddleware(async (req: Request, res: Response) => {
   const data = req.body;
   const result = await CarPackageService.createData(data);
-
+  // console.log(data, ' successfully');
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -92,6 +92,23 @@ const getCalculatedPrice = asyncMiddleware(async (req: Request, res: Response) =
   });
 });
 
+type BookQuery = {
+  serviceType: string;
+  bookingDate: string; // Note that we're keeping this as a string
+};
+const retrieveAvailableData = asyncMiddleware(async (req: Request, res: Response) => {
+  const { serviceType, bookingDate } = req.query as BookQuery;
+
+  const result = await CarPackageService.retrieveAvailableData(serviceType, bookingDate);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Car Package  obtained',
+    data: result,
+  });
+});
+
 export const CarPackageController = {
   createData,
   retrieveManyData,
@@ -100,4 +117,5 @@ export const CarPackageController = {
   deleteOneData,
   makeCarAvailable,
   getCalculatedPrice,
+  retrieveAvailableData,
 };

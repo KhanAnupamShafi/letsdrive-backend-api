@@ -125,6 +125,7 @@ const retrieveManyData = async (
                 fullName: { contains: searchTerm, mode: 'insensitive' },
               },
             },
+            { carPackage: { name: { contains: searchTerm, mode: 'insensitive' } } },
             {
               user: {
                 phoneNumber: { contains: searchTerm, mode: 'insensitive' },

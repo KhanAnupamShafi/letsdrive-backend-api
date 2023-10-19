@@ -32,6 +32,7 @@ const loginUser = async (payload: ILoginUser) => {
     throw new Error('Password is incorrect');
   }
   const payloadData = {
+    id: isUserExist!.id,
     email: isUserExist!.email,
     role: isUserExist!.role,
     phoneNumber: isUserExist!.phoneNumber,
@@ -64,7 +65,7 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
     throw new ApiError(httpStatus.FORBIDDEN, 'Invalid Refresh Token');
   }
   console.log(verifiedToken, 'verifiedToken');
-  const { email, role, phoneNumber, fullName } = verifiedToken;
+  const { id, email, role, phoneNumber, fullName } = verifiedToken;
 
   // user deleted  but refresh token persisting
   // checking deleted user's refresh token
@@ -83,6 +84,7 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   //generate new token
 
   const payloadData = {
+    id: id,
     email: email,
     role: role,
     phoneNumber: phoneNumber,
