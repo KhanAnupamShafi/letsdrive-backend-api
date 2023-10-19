@@ -83,6 +83,39 @@ const retrieveManyData = async (
   };
 };
 
+const retrieveAvailableData = async (
+  serviceType: string,
+  bookingDate: string
+): Promise<CarPackage[]> => {
+  // Parse bookingDate to a Date object
+  const bookingDateAsDate = new Date(bookingDate);
+  console.log(bookingDateAsDate, 'bookingDateAsDate');
+  const result = await prisma.carPackage.findMany({
+    include: {
+      service: true,
+      bookings: {
+        where: {
+          departureDate: {
+            gte: bookingDateAsDate,
+          },
+          // status: {
+          //   not: "CANCELED", // Exclude canceled bookings
+          // },
+        },
+      },
+    },
+    where: {
+      service: { name: serviceType },
+      isAvailable: true,
+    },
+  });
+
+  if (!result) {
+    throw new ApiError(404, 'Car data not found');
+  }
+  return result;
+};
+
 const retrieveOneData = async (id: string): Promise<CarPackage | null> => {
   const result = await prisma.carPackage.findUnique({
     include: { service: true },
@@ -187,4 +220,5 @@ export const CarPackageService = {
   deleteOneData,
   makeCarAvailable,
   getCalculatedPrice,
+  retrieveAvailableData,
 };
