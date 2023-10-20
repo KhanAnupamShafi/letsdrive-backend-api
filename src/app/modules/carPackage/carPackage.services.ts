@@ -86,7 +86,7 @@ const retrieveManyData = async (
 const retrieveAvailableData = async (
   serviceType: string,
   bookingDate: string
-): Promise<CarPackage[]> => {
+): Promise<IGenericResponse<CarPackage[]>> => {
   // Parse bookingDate to a Date object
   const bookingDateAsDate = new Date(bookingDate);
   console.log(bookingDateAsDate, 'bookingDateAsDate');
@@ -113,7 +113,16 @@ const retrieveAvailableData = async (
   if (!result) {
     throw new ApiError(404, 'Car data not found');
   }
-  return result;
+  const total = await prisma.carPackage.count({});
+
+  return {
+    meta: {
+      total,
+      page: 1,
+      limit: 100,
+    },
+    data: result,
+  };
 };
 
 const retrieveOneData = async (id: string): Promise<CarPackage | null> => {
