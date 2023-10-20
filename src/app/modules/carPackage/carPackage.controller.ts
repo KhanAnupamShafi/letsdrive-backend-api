@@ -105,7 +105,8 @@ const retrieveAvailableData = asyncMiddleware(async (req: Request, res: Response
     statusCode: httpStatus.OK,
     success: true,
     message: 'Car Package  obtained',
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 
